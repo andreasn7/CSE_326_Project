@@ -1,4 +1,7 @@
-h1 {
-  color: blue;
-  text-align: center;
+body {
+	background-color: lightblue;
+}
+a {
+	font-size:25px;
+	padding:20px;
 }
