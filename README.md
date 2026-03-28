@@ -4,9 +4,9 @@
 
 | Name             |Student ID|         Module          |
 |------------------|-------|----------------------------|
-| Andreas Nikolaou | 27675 | Admin (`modules/admin/`)   |
-| Michalis Gavriel | 27379 | Submit (`modules/submit/`) |
-| Giannis Loizou   | 30872 | Search (`modules/search/`) |
+| Andreas Nikolaou | 27675 | Admin (`/admin/`)   |
+| Michalis Gavriel | 27379 | Submit (`/submit/`) |
+| Giannis Loizou   | 30872 | Search (`/search/`) |
 
 ## Project Structure
 
