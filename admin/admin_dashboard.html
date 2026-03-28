@@ -1,20 +1,39 @@
-<!-- This is the admin dashboard -->
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Admin Dashboard</title>
-<link rel="stylesheet" href="../assets/css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<nav>
-  <a href="../index.html">Main Page</a>
-  <a href="admin_dashboard.html">Admin Module</a>
-  <a href="../search/search_dashboard.html">Search Module</a>
-  <a href="../submit/submit_dashboard.html">Submit Module</a>
-</nav>
-<h1>Admin Dashboard</h1>
-<h3>This is the Admin Dashboard Module</h2>
-
+  <header id="page-header">
+    <h1>Admin Dashboard</h1>
+    <p class="subtitle">System Administration Panel</p>
+  </header>
+  <nav id="main-nav">
+    <a href="../../index.php" class="nav-link">Home</a>
+    <a href="admin_dashboard.php" class="nav-link active">Admin</a>
+    <a href="../submit/submit_dashboard.php" class="nav-link">Submit</a>
+    <a href="../search/search_dashboard.php" class="nav-link">Search</a>
+  </nav>
+  <main>
+    <section id="stats-section">
+      <h2>System Overview</h2>
+      <div class="panel-grid">
+        <div class="panel">
+          <h2>Administration</h2>
+          <p class="stat-label">Administrative functions will be displayed here when connected to live system data.</p>
+        </div>
+      </div>
+    </section>
+    <section id="users-section">
+      <h2>Recent Users</h2>
+      <p>User records will appear here when the module is connected to backend data.</p>
+    </section>
+  </main>
+  <footer id="page-footer">
+    <p>CEI326 Web Engineering 2026 - Admin Module</p>
+  </footer>
 </body>
 </html>
