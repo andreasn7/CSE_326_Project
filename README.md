@@ -15,16 +15,15 @@ WebEngineeringPHP/
 ├── assets/
 │   └── css/
 │       └── style.css
-├── modules/
-│   ├── admin/
-│   │   ├── admin_dashboard.php
-│   │   └── style.css
-│   ├── submit/
-│   │   ├── submit_dashboard.php
-│   │   └── style.css
-│   └── search/
-│       ├── search_dashboard.php
-│       └── style.css
+├── admin/
+│   ├── admin_dashboard.php
+│   └── style.css
+├── submit/
+│   ├── submit_dashboard.php
+│   └── style.css
+└── search/
+│   ├── search_dashboard.php
+│   └── style.css
 ├── index.php
 └── README.md
 ```
