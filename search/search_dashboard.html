@@ -1,20 +1,50 @@
-<!-- This is the search dashboard -->
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Search Dashboard</title>
-<link rel="stylesheet" href="../assets/css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search Records</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<nav>
-  <a href="../index.html">Main Page</a>
-  <a href="../admin/admin_dashboard.html">Admin Module</a>
-  <a href="search_dashboard.html">Search Module</a>
-  <a href="../submit/submit_dashboard.html">Submit Module</a>
-</nav>
-<h1>Search Dashboard</h1>
-<h3>This is the Search Dashboard Module</h2>
-
+  <header id="page-header">
+    <h1>Search Records</h1>
+    <p class="subtitle">Browse and Find Existing Entries</p>
+  </header>
+  <nav id="main-nav">
+    <a href="../../index.php" class="nav-link">Home</a>
+    <a href="../admin/admin_dashboard.php" class="nav-link">Admin</a>
+    <a href="../submit/submit_dashboard.php" class="nav-link">Submit</a>
+    <a href="search_dashboard.php" class="nav-link active">Search</a>
+  </nav>
+  <main>
+    <section id="search-section">
+      <h2>Search</h2>
+      <div class="search-box">
+        <input type="text" class="search-input" placeholder="Search by title, author, or category...">
+        <button class="btn btn-search">Search</button>
+      </div>
+      <div class="filter-bar">
+        <span class="filter-label">Filter by:</span>
+        <button class="filter-btn active">All</button>
+        <button class="filter-btn">Reports</button>
+        <button class="filter-btn">Projects</button>
+        <button class="filter-btn">Other</button>
+      </div>
+    </section>
+    <section id="results-section">
+      <h2>Results</h2>
+      <p>Search results will appear here after a search is performed.</p>
+    </section>
+    <section id="tips-section">
+      <h2>Search Tips</h2>
+      <div class="tips-panel">
+        <p>Use keywords and filters to refine your search.</p>
+      </div>
+    </section>
+  </main>
+  <footer id="page-footer">
+    <p>CEI326 Web Engineering 2026 - Search Module</p>
+  </footer>
 </body>
 </html>
