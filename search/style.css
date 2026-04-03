@@ -1,35 +1,62 @@
+/* Base */
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background-color: #f5f0fa;
   color: #2c3e50;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
+
+/* Header */
 
 #page-header {
   background-color: #3a1a5a;
   color: #ffffff;
   padding: 38px 60px;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+#page-header .header-text {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
   text-align: center;
 }
 
 #page-header h1 {
-  font-size: 2.2rem;
+  font-size: 2.4rem;
+  line-height: 1.15;
   margin-bottom: 6px;
+  letter-spacing: -0.02em;
 }
 
 #page-header .subtitle {
   font-size: 1rem;
+  line-height: 1.5;
   color: #c4a8e0;
 }
+
+/* Navigation */
 
 #main-nav {
   background-color: #1e2a3a;
   display: flex;
+  align-items: center;
   padding: 0 60px;
   gap: 4px;
 }
@@ -39,8 +66,8 @@ body {
   color: #cdd6e0;
   text-decoration: none;
   padding: 16px 24px;
-  font-size: 1rem;
-  font-weight: 500;
+  font-size: 0.98rem;
+  font-weight: 600;
   transition: background-color 0.2s, color 0.2s;
 }
 
@@ -54,23 +81,38 @@ body {
   color: #ffffff;
 }
 
+#main-nav .nav-link.nav-logout {
+  margin-left: auto;
+  color: #e87c7c;
+}
+
+#main-nav .nav-link.nav-logout:hover {
+  background-color: #c0392b !important;
+  color: #ffffff !important;
+}
+
+/* Layout */
+
 main {
+  flex: 1;
   max-width: 1000px;
-  margin: 48px auto;
+  margin: 52px auto;
   padding: 0 40px;
 }
 
 main section {
-  margin-bottom: 52px;
+  margin-bottom: 56px;
 }
 
 main section h2 {
-  font-size: 1.65rem;
+  font-size: 1.88rem;
+  line-height: 1.25;
   color: #3a1a5a;
-  margin-bottom: 20px;
-  padding-bottom: 8px;
+  margin-bottom: 18px;
+  padding-bottom: 9px;
   border-bottom: 3px solid #8e44ad;
   display: inline-block;
+  letter-spacing: -0.02em;
 }
 
 main section p {
@@ -79,6 +121,8 @@ main section p {
   color: #4a5568;
   margin-top: 8px;
 }
+
+/* Search */
 
 .search-box {
   display: flex;
@@ -140,6 +184,8 @@ main section p {
   border-color: #8e44ad;
 }
 
+/* Buttons */
+
 .btn {
   display: inline-block;
   padding: 11px 26px;
@@ -174,6 +220,22 @@ main section p {
   transform: translateY(-1px);
 }
 
+.btn-secondary {
+  background-color: #95a5a6;
+  color: #ffffff;
+}
+
+.btn-secondary:hover {
+  background-color: #7f8c8d;
+  transform: translateY(-2px);
+}
+
+.btn-clear {
+  padding: 11px 18px;
+}
+
+/* Results */
+
 .results-list {
   display: flex;
   flex-direction: column;
@@ -201,13 +263,15 @@ main section p {
 }
 
 .result-card-header h2 {
-  font-size: 1.1rem;
+  font-size: 1.06rem;
+  line-height: 1.4;
   color: #3a1a5a;
   flex: 1;
   border-bottom: none;
   display: block;
   padding-bottom: 0;
   margin-bottom: 0;
+  letter-spacing: 0;
 }
 
 .result-card p {
@@ -237,6 +301,8 @@ main section p {
   white-space: nowrap;
 }
 
+/* Helper blocks */
+
 .tips-panel {
   background-color: #f0e6ff;
   border-left: 4px solid #8e44ad;
@@ -250,6 +316,14 @@ main section p {
   margin-top: 0;
 }
 
+.result-count {
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: #888;
+}
+
+/* Footer */
+
 #page-footer {
   background-color: #3a1a5a;
   color: #c4a8e0;
@@ -259,9 +333,25 @@ main section p {
   font-size: 0.9rem;
 }
 
+.results-list {
+  max-height: 480px;
+  overflow-y: auto;
+}
+
+/* Responsive */
+
 @media (max-width: 768px) {
   #page-header {
     padding: 24px 18px;
+  }
+
+  #page-header h1 {
+    font-size: 2rem;
+    margin-bottom: 6px;
+  }
+
+  #page-header .subtitle {
+    font-size: 0.95rem;
   }
 
   #main-nav {
@@ -270,11 +360,31 @@ main section p {
   }
 
   main {
-    margin: 36px auto;
+    margin: 40px auto;
     padding: 0 18px;
+  }
+
+  main section {
+    margin-bottom: 48px;
+  }
+
+  main section h2 {
+    font-size: 1.62rem;
+    margin-bottom: 16px;
   }
 
   .search-box {
     flex-direction: column;
+  }
+
+  .result-card-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .result-meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
   }
 }
