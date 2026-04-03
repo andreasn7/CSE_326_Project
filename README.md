@@ -13,19 +13,25 @@
 ```
 WebEngineeringPHP/
 ├── assets/
-│   └── css/
-│       └── style.css
-├── admin/
-│   ├── admin_dashboard.php
-│   └── style.css
-├── submit/
-│   ├── submit_dashboard.php
-│   └── style.css
-└── search/
-│   ├── search_dashboard.php
-│   └── style.css
-├── index.php
-└── README.md
+│   ├── css/
+│   └── images/
+├── auth/
+│   ├── auth.css
+│   ├── login.php
+│   ├── register.php
+│   └── logout.php
+├── database/
+│   ├── schema.sql
+│   └── seed.sql
+├── includes/
+│   └── db.php
+├── modules/
+│   ├── admin/
+│   ├── dashboard/
+│   ├── list/
+│   ├── search/
+│   └── submit/
+└── index.php
 ```
 
 ## Prerequisites
