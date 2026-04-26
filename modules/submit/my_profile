@@ -1,0 +1,309 @@
+<?php
+session_start();
+if (!isset($_SESSION['user_id'])) { header('Location: ../../auth/login.php'); exit; }
+require_once '../../includes/db.php';
+$isAdmin = $_SESSION['role'] === 'admin';
+
+$errors = [];
+$success = '';
+
+// Reference data shared across both view and submit phases.
+$parties = $pdo->query('SELECT * FROM parties ORDER BY name')->fetchAll();
+$positions = $pdo->query('SELECT * FROM positions ORDER BY title')->fetchAll();
+$districts = $pdo->query('SELECT * FROM districts ORDER BY name')->fetchAll();
+$committees = $pdo->query('SELECT * FROM committees ORDER BY name')->fetchAll();
+
+// Load the user record (always present since the request is authenticated).
+$stmt = $pdo->prepare('SELECT * FROM users WHERE id = :id');
+$stmt->execute([':id' => $_SESSION['user_id']]);
+$user = $stmt->fetch();
+
+// Load the politician profile and current committee memberships, if any.
+$politician = null;
+$currentCommitteeIds = [];
+if (!$isAdmin) {
+    $stmt = $pdo->prepare('SELECT * FROM politicians WHERE user_id = :uid');
+    $stmt->execute([':uid' => $_SESSION['user_id']]);
+    $politician = $stmt->fetch();
+
+    if ($politician) {
+        $cStmt = $pdo->prepare('SELECT committee_id FROM politician_committees WHERE politician_id = :pid');
+        $cStmt->execute([':pid' => $politician['id']]);
+        $currentCommitteeIds = array_map('intval', $cStmt->fetchAll(PDO::FETCH_COLUMN));
+    }
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $username = trim($_POST['username'] ?? '');
+    $phone = trim($_POST['phone'] ?? '');
+    $firstName = trim($_POST['first_name'] ?? '');
+    $lastName = trim($_POST['last_name'] ?? '');
+    $partyId = (int)($_POST['party_id'] ?? 0) ?: null;
+    $posId = (int)($_POST['position_id'] ?? 0) ?: null;
+    $distId = (int)($_POST['district_id'] ?? 0) ?: null;
+    $children = max(0, (int)($_POST['children'] ?? 0));
+    $selectedCommitteeIds = isset($_POST['committee_ids']) && is_array($_POST['committee_ids'])
+        ? array_values(array_unique(array_map('intval', $_POST['committee_ids'])))
+        : [];
+
+    if ($username === '') {
+        $errors[] = 'Username is required.';
+    }
+
+    if (empty($errors)) {
+        $pdo->prepare(
+            'UPDATE users SET username = :u, phone = :p,
+                              first_name = :fn, last_name = :ln
+              WHERE id = :id'
+        )->execute([
+            ':u' => $username, ':p' => $phone,
+            ':fn' => $firstName, ':ln' => $lastName,
+            ':id' => $_SESSION['user_id'],
+        ]);
+        $_SESSION['username'] = $username;
+
+        if (!$isAdmin) {
+            if ($politician) {
+                $pdo->prepare(
+                    'UPDATE politicians
+                        SET party_id = :pa, position_id = :po,
+                            district_id = :di, children = :ch
+                      WHERE id = :id'
+                )->execute([
+                    ':pa' => $partyId, ':po' => $posId,
+                    ':di' => $distId, ':ch' => $children,
+                    ':id' => $politician['id'],
+                ]);
+                $polId = (int)$politician['id'];
+            } else {
+                $pdo->prepare(
+                    'INSERT INTO politicians (user_id, party_id, position_id, district_id, children)
+                     VALUES (:uid, :pa, :po, :di, :ch)'
+                )->execute([
+                    ':uid' => $_SESSION['user_id'],
+                    ':pa' => $partyId, ':po' => $posId,
+                    ':di' => $distId, ':ch' => $children,
+                ]);
+                $polId = (int)$pdo->lastInsertId();
+            }
+
+            // Replace committee memberships in a single transaction so the
+            // junction table never reflects a partial update.
+            $pdo->beginTransaction();
+            try {
+                $pdo->prepare('DELETE FROM politician_committees WHERE politician_id = :pid')
+                    ->execute([':pid' => $polId]);
+                if (!empty($selectedCommitteeIds)) {
+                    $ins = $pdo->prepare(
+                        'INSERT INTO politician_committees (politician_id, committee_id)
+                         VALUES (:pid, :cid)'
+                    );
+                    foreach ($selectedCommitteeIds as $cid) {
+                        if ($cid > 0) {
+                            $ins->execute([':pid' => $polId, ':cid' => $cid]);
+                        }
+                    }
+                }
+                $pdo->commit();
+            } catch (Throwable $e) {
+                $pdo->rollBack();
+                throw $e;
+            }
+        }
+
+        $success = 'Profile updated successfully.';
+
+        // Re-read so the form reflects the values just persisted.
+        $stmt = $pdo->prepare('SELECT * FROM users WHERE id = :id');
+        $stmt->execute([':id' => $_SESSION['user_id']]);
+        $user = $stmt->fetch();
+
+        if (!$isAdmin) {
+            $stmt = $pdo->prepare('SELECT * FROM politicians WHERE user_id = :uid');
+            $stmt->execute([':uid' => $_SESSION['user_id']]);
+            $politician = $stmt->fetch();
+            $cStmt = $pdo->prepare('SELECT committee_id FROM politician_committees WHERE politician_id = :pid');
+            $cStmt->execute([':pid' => $polId]);
+            $currentCommitteeIds = array_map('intval', $cStmt->fetchAll(PDO::FETCH_COLUMN));
+        }
+    }
+}
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Profile &ndash; CEI326</title>
+  <link rel="icon" type="image/x-icon" href="../../favicon.ico">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .checkbox-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 10px;
+      padding: 12px;
+      border: 1px solid #dce3ec;
+      border-radius: 8px;
+      background: #f9fbfd;
+    }
+    .checkbox-group label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 400;
+      cursor: pointer;
+      padding: 6px 10px;
+      border-radius: 6px;
+      transition: background 0.15s;
+    }
+    .checkbox-group label:hover {
+      background: #e8f0fe;
+    }
+    .checkbox-group input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      accent-color: #1a6fa8;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+  </style>
+</head>
+<body>
+  <header id="page-header">
+    <img class="header-logo" src="../../assets/images/assets.png" alt="logo" width="84" height="84">
+    <div class="header-text">
+      <h1>My Profile</h1>
+      <p class="subtitle">Your Personal Information</p>
+    </div>
+  </header>
+  <nav id="main-nav">
+    <a href="../../index.php" class="nav-link">Home</a>
+    <a href="../dashboard/dashboard.php" class="nav-link">Dashboard</a>
+    <?php if ($isAdmin): ?><a href="../admin/admin_dashboard.php" class="nav-link">Admin</a><?php endif; ?>
+    <a href="submit_dashboard.php" class="nav-link">Submit</a>
+    <a href="my_profile.php" class="nav-link active">My Profile</a>
+    <?php if (!$isAdmin): ?><a href="my_submissions.php" class="nav-link">My Submissions</a><?php endif; ?>
+    <a href="../search/search_dashboard.php" class="nav-link">Search</a>
+    <a href="../search/statistics.php" class="nav-link">Statistics</a>
+    <a href="../../auth/logout.php" class="nav-link nav-logout">Logout</a>
+  </nav>
+  <main>
+    <?php if ($success): ?><div class="alert alert-success"><?= htmlspecialchars($success) ?></div><?php endif; ?>
+    <?php if (!empty($errors)): ?>
+      <div class="alert alert-error">
+        <ul><?php foreach ($errors as $e): ?><li><?= htmlspecialchars($e) ?></li><?php endforeach; ?></ul>
+      </div>
+    <?php endif; ?>
+
+    <section>
+      <h2>Profile Information</h2>
+      <div class="form-card">
+        <form method="POST">
+          <div class="form-group">
+            <label>Email (cannot be changed)</label>
+            <input type="email" class="form-control" value="<?= htmlspecialchars($user['email']) ?>" disabled style="background:#f5f5f5;color:#888;">
+          </div>
+          <div class="form-group">
+            <label>Username<span class="required-mark" style="color:#c0392b;">*</span></label>
+            <input type="text" name="username" class="form-control" value="<?= htmlspecialchars($user['username']) ?>" required>
+          </div>
+          <div class="form-group">
+            <label>Phone</label>
+            <input type="text" name="phone" class="form-control" value="<?= htmlspecialchars($user['phone'] ?? '') ?>">
+          </div>
+
+          <hr style="margin:24px 0;border:none;border-top:1px solid #e8edf3;">
+          <h3 style="font-size:1rem;color:#1a4a35;margin-bottom:16px;">Personal Details</h3>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+            <div class="form-group">
+              <label>First Name</label>
+              <input type="text" name="first_name" class="form-control" value="<?= htmlspecialchars($user['first_name'] ?? '') ?>">
+            </div>
+            <div class="form-group">
+              <label>Last Name</label>
+              <input type="text" name="last_name" class="form-control" value="<?= htmlspecialchars($user['last_name'] ?? '') ?>">
+            </div>
+          </div>
+
+          <?php if (!$isAdmin): ?>
+          <hr style="margin:24px 0;border:none;border-top:1px solid #e8edf3;">
+          <h3 style="font-size:1rem;color:#1a4a35;margin-bottom:16px;">Politician Details</h3>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+            <div class="form-group">
+              <label>Party</label>
+              <select name="party_id" class="form-control">
+                <option value="">– Select –</option>
+                <?php foreach ($parties as $p): ?>
+                  <option value="<?= (int)$p['id'] ?>" <?= ($politician['party_id'] ?? null) == $p['id'] ? 'selected' : '' ?>>
+                    <?= htmlspecialchars($p['name']) ?>
+                  </option>
+                <?php endforeach; ?>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Position</label>
+              <select name="position_id" class="form-control">
+                <option value="">– Select –</option>
+                <?php foreach ($positions as $pos): ?>
+                  <option value="<?= (int)$pos['id'] ?>" <?= ($politician['position_id'] ?? null) == $pos['id'] ? 'selected' : '' ?>>
+                    <?= htmlspecialchars($pos['title']) ?>
+                  </option>
+                <?php endforeach; ?>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>District</label>
+              <select name="district_id" class="form-control">
+                <option value="">– Select –</option>
+                <?php foreach ($districts as $d): ?>
+                  <option value="<?= (int)$d['id'] ?>" <?= ($politician['district_id'] ?? null) == $d['id'] ? 'selected' : '' ?>>
+                    <?= htmlspecialchars($d['name']) ?>
+                  </option>
+                <?php endforeach; ?>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Number of Children</label>
+              <input type="number" name="children" class="form-control" min="0" value="<?= (int)($politician['children'] ?? 0) ?>">
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-top:16px;">
+            <label>Committees</label>
+            <div class="checkbox-group">
+              <?php foreach ($committees as $c): ?>
+                <label>
+                  <input type="checkbox" name="committee_ids[]" value="<?= (int)$c['id'] ?>"
+                    <?= in_array((int)$c['id'], $currentCommitteeIds, true) ? 'checked' : '' ?>>
+                  <?= htmlspecialchars($c['name']) ?>
+                </label>
+              <?php endforeach; ?>
+            </div>
+          </div>
+          <?php endif; ?>
+
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+            <a href="submit_dashboard.php" class="btn btn-secondary">Back</a>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <section id="change-pw-section">
+      <div class="change-pw-row">
+        <div class="change-pw-info">
+          <span class="change-pw-icon">🔒</span>
+          <div>
+            <strong>Change Password</strong>
+            <p>Update your account password to keep your account secure.</p>
+          </div>
+        </div>
+        <a href="change_password.php" class="btn btn-primary">Change Password</a>
+      </div>
+    </section>
+  </main>
+  <footer id="page-footer"><p>CEI326 Web Engineering 2026 &mdash; Submit Module</p></footer>
+</body>
+</html>
