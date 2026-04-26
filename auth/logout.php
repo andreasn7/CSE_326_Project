@@ -1,8 +1,6 @@
 <?php
-// Session
 session_start();
-
-// Logout
+$_SESSION = [];
 session_destroy();
 header('Location: ../auth/login.php');
 exit;
