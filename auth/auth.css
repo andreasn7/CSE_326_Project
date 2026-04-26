@@ -194,6 +194,48 @@ main section h2 {
   font-size: 0.9rem;
 }
 
+/* Password field (login.php & register.php) */
+
+.password-field {
+  position: relative;
+}
+
+.password-field .form-control {
+  padding-right: 52px;
+}
+
+.password-toggle {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 1.05rem;
+  line-height: 1;
+  color: #666;
+  padding: 4px;
+}
+
+.password-toggle:hover {
+  color: #2c3e50;
+}
+
+.password-toggle:focus {
+  outline: 2px solid #3498db;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Required field mark (register.php) */
+
+.required-mark {
+  color: #c0392b;
+  margin-left: 2px;
+  font-weight: 700;
+}
+
 /* Responsive */
 
 @media (max-width: 768px) {
