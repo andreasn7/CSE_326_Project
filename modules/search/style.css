@@ -388,3 +388,116 @@ main section p {
     gap: 8px;
   }
 }
+
+/* Public stats overview */
+.stats-overview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.stats-card {
+  background-color: #ffffff;
+  border-radius: 10px;
+  padding: 22px 18px;
+  text-align: center;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+  border-top: 3px solid #8e44ad;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.stats-card:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  transform: translateY(-3px);
+}
+
+.stats-icon {
+  font-size: 1.8rem;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.stats-number {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #3a1a5a;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.stats-label {
+  font-size: 0.8rem;
+  color: #888;
+  line-height: 1.4;
+}
+
+.stats-charts-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.chart-card {
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 24px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+}
+
+.chart-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #3a1a5a;
+  margin-bottom: 16px;
+}
+
+.demo-title {
+  border-bottom: 2px solid #8e44ad;
+  padding-bottom: 6px;
+  display: inline-block;
+  margin-bottom: 12px;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+  overflow-y: auto;
+  max-height: 320px;
+  border-radius: 10px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #ffffff;
+}
+
+.data-table thead tr { background-color: #3a1a5a; color: #ffffff; }
+
+.data-table th {
+  padding: 14px 20px;
+  text-align: left;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  position: sticky;
+  top: 0;
+  background-color: #3a1a5a;
+  z-index: 1;
+}
+
+.data-table td {
+  padding: 14px 20px;
+  font-size: 0.94rem;
+  border-bottom: 1px solid #e9ecef;
+  color: #444;
+  vertical-align: middle;
+}
+
+.data-table tbody tr:last-child td { border-bottom: none; }
+.data-table tbody tr:hover { background-color: #f5f0fa; }
+
+@media (max-width: 768px) {
+  .stats-charts-grid { grid-template-columns: 1fr; }
+}
