@@ -1,35 +1,33 @@
 <?php
-// Session
 session_start();
 
-// Redirect
+// Already authenticated users skip the login screen.
 if (isset($_SESSION['user_id'])) {
     header('Location: ../modules/dashboard/dashboard.php');
     exit;
 }
 
-// Dependencies
 require_once '../includes/db.php';
 
-// Form state
 $error = '';
 
-// Form handling
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $email    = trim($_POST['email'] ?? '');
+    $email = trim($_POST['email'] ?? '');
     $password = $_POST['password'] ?? '';
 
     if ($email !== '' && $password !== '') {
-        $stmt = $pdo->prepare('SELECT * FROM users WHERE email = :email');
+        $stmt = $pdo->prepare('SELECT id, username, role, password_hash FROM users WHERE email = :email');
         $stmt->execute([':email' => $email]);
         $user = $stmt->fetch();
 
         if ($user && password_verify($password, $user['password_hash'])) {
+            // Mitigate session fixation by issuing a fresh session id once
+            // the credentials have been verified.
             session_regenerate_id(true);
 
-            $_SESSION['user_id']  = $user['id'];
+            $_SESSION['user_id'] = $user['id'];
             $_SESSION['username'] = $user['username'];
-            $_SESSION['role']     = $user['role'];
+            $_SESSION['role'] = $user['role'];
 
             header('Location: ../modules/dashboard/dashboard.php');
             exit;
@@ -39,7 +37,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $error = 'Invalid credentials. Please check your email and password.';
 }
 
-// View state
 $registered = isset($_GET['registered']) && $_GET['registered'] === '1';
 ?>
 <!DOCTYPE html>
@@ -47,42 +44,10 @@ $registered = isset($_GET['registered']) && $_GET['registered'] === '1';
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login – CEI326</title>
+  <title>Login &ndash; CEI326</title>
+  <link rel="icon" type="image/x-icon" href="../favicon.ico">
   <link rel="stylesheet" href="../assets/css/style.css">
   <link rel="stylesheet" href="auth.css">
-  <style>
-    .password-field {
-      position: relative;
-    }
-
-    .password-field .form-control {
-      padding-right: 52px;
-    }
-
-    .password-toggle {
-      position: absolute;
-      top: 50%;
-      right: 12px;
-      transform: translateY(-50%);
-      border: none;
-      background: transparent;
-      cursor: pointer;
-      font-size: 1.05rem;
-      line-height: 1;
-      color: #666;
-      padding: 4px;
-    }
-
-    .password-toggle:hover {
-      color: #2c3e50;
-    }
-
-    .password-toggle:focus {
-      outline: 2px solid #3498db;
-      outline-offset: 2px;
-      border-radius: 4px;
-    }
-  </style>
 </head>
 <body>
   <header id="page-header">
@@ -96,6 +61,8 @@ $registered = isset($_GET['registered']) && $_GET['registered'] === '1';
     <a href="../index.php" class="nav-link">Home</a>
     <a href="login.php" class="nav-link active">Login</a>
     <a href="register.php" class="nav-link">Register</a>
+    <a href="../modules/search/search_dashboard.php" class="nav-link">Search</a>
+    <a href="../modules/search/statistics.php" class="nav-link">Statistics</a>
   </nav>
   <main>
     <section id="form-section">
@@ -140,20 +107,15 @@ $registered = isset($_GET['registered']) && $_GET['registered'] === '1';
     </section>
   </main>
   <footer id="page-footer">
-    <p>CEI326 Web Engineering 2026 – Group Project</p>
+    <p>CEI326 Web Engineering 2026 &ndash; Group Project</p>
   </footer>
 
   <script>
-    const passwordToggleButtons = document.querySelectorAll('.password-toggle');
-
-    passwordToggleButtons.forEach(function (button) {
+    // Toggle visibility of password fields when the eye icon is clicked.
+    document.querySelectorAll('.password-toggle').forEach(function (button) {
       button.addEventListener('click', function () {
-        const targetId = button.getAttribute('data-target');
-        const input = document.getElementById(targetId);
-
-        if (!input) {
-          return;
-        }
+        var input = document.getElementById(button.getAttribute('data-target'));
+        if (!input) return;
 
         if (input.type === 'password') {
           input.type = 'text';
