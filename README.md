@@ -11,27 +11,54 @@
 ## Project Structure
 
 ```
-WebEngineeringPHP/
+CSE_326_Project/
+├── api/
+│   └── index.php
 ├── assets/
 │   ├── css/
+│   │   └── style.css
 │   └── images/
+│       ├── assets.png
+│       ├── favicon.ico
+│       └── web-engineering-header.svg
 ├── auth/
 │   ├── auth.css
 │   ├── login.php
-│   ├── register.php
-│   └── logout.php
+│   ├── logout.php
+│   └── register.php
 ├── database/
 │   ├── schema.sql
 │   └── seed.sql
 ├── includes/
-│   └── db.php
+│   ├── db.php
+│   └── header.php
 ├── modules/
 │   ├── admin/
+│   │   ├── admin_dashboard.php
+│   │   ├── change_password.php
+│   │   ├── configure_system.php
+│   │   ├── manage_submissions.php
+│   │   ├── manage_users.php
+│   │   ├── reports.php
+│   │   └── style.css
 │   ├── dashboard/
+│   │   └── dashboard.php
 │   ├── list/
+│   │   └── list.php
 │   ├── search/
+│   │   ├── search_dashboard.php
+│   │   ├── statistics.php
+│   │   └── style.css
 │   └── submit/
-└── index.php
+│       ├── change_password.php
+│       ├── my_profile.php
+│       ├── my_submissions.php
+│       ├── style.css
+│       └── submit_dashboard.php
+├── favicon.ico
+├── index.php
+├── package-lock.json
+└── README.md
 ```
 
 ## Prerequisites
