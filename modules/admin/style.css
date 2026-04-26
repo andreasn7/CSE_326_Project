@@ -343,3 +343,212 @@ main section h2 {
     margin-bottom: 16px;
   }
 }
+
+/* Admin icon grid */
+.admin-icon-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 24px;
+  margin-top: 20px;
+}
+
+.admin-icon-card {
+  background-color: #ffffff;
+  border: 1px solid #dde3ec;
+  border-radius: 12px;
+  padding: 36px 24px 28px;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+  transition: border-color 0.15s, transform 0.15s, box-shadow 0.15s;
+}
+
+.admin-icon-card:hover {
+  border-color: #1a6fa8;
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(26, 111, 168, 0.12);
+}
+
+.admin-icon-wrap {
+  font-size: 2.6rem;
+  line-height: 1;
+  margin-bottom: 6px;
+  background-color: #ebf5fb;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.admin-icon-card strong {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1a3a5c;
+  display: block;
+}
+
+.admin-icon-card span {
+  font-size: 0.84rem;
+  color: #718096;
+  line-height: 1.5;
+}
+
+/* Form helpers */
+.form-card {
+  background-color: #ffffff;
+  border-radius: 10px;
+  padding: 36px 40px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 7px;
+}
+
+.form-control {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-family: inherit;
+  color: #333;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: #1a6fa8;
+  box-shadow: 0 0 0 3px rgba(26,111,168,0.15);
+}
+
+.form-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.alert {
+  border-radius: 8px;
+  padding: 14px 18px;
+  margin-bottom: 20px;
+  font-size: 0.9rem;
+}
+
+.alert-error {
+  background-color: #fdf0ef;
+  border: 1px solid #f5c6c2;
+  color: #a93226;
+}
+
+.alert-error ul { margin: 8px 0 0 18px; }
+
+.alert-success {
+  background-color: #eafaf1;
+  border: 1px solid #a9dfbf;
+  color: #1e8449;
+}
+
+.badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.badge-role-admin {
+  background-color: #ebf5fb;
+  color: #2176ae;
+  border: 1px solid #aed6f1;
+}
+
+.badge-role-politician {
+  background-color: #f4f6f7;
+  color: #717d7e;
+  border: 1px solid #d5d8dc;
+}
+
+.badge-submitted {
+  background-color: #eafaf1;
+  color: #1e8449;
+  border: 1px solid #a9dfbf;
+}
+
+.badge-draft {
+  background-color: #fef9e7;
+  color: #b7770d;
+  border: 1px solid #f9e79f;
+}
+
+.panel-action {
+  margin-top: 16px;
+  display: inline-block;
+}
+
+.required-mark {
+  color: #c0392b;
+  margin-left: 2px;
+}
+
+select.form-control {
+  background-color: #fff;
+}
+
+.change-pw-row {
+  background: #ffffff;
+  border: 1px solid #dde3ec;
+  border-radius: 12px;
+  padding: 22px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  box-shadow: 0 2px 10px rgba(0,0,0,.06);
+}
+
+.change-pw-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.change-pw-icon {
+  font-size: 1.6rem;
+  background: #ebf5fb;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.change-pw-info strong {
+  display: block;
+  font-size: .95rem;
+  color: #1a3a5c;
+  font-weight: 700;
+  margin-bottom: 3px;
+}
+
+.change-pw-info p {
+  font-size: .83rem;
+  color: #718096;
+  margin: 0;
+}
