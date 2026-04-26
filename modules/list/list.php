@@ -47,7 +47,7 @@ $posts = $stmt->fetchAll();
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Posts – CEI326</title>
   <link rel="stylesheet" href="../../assets/css/style.css">
-  <link rel="stylesheet" href="../search/style.css">
+  <?php include $_SERVER['DOCUMENT_ROOT'] . '/dashboard/CSE_326_Project_NEW/includes/header.php'; ?>
 </head>
 <body>
   <header id="page-header">
@@ -60,6 +60,9 @@ $posts = $stmt->fetchAll();
   <nav id="main-nav">
     <a href="../../index.php" class="nav-link">Home</a>
     <a href="../dashboard/dashboard.php" class="nav-link">Dashboard</a>
+    <a href="../submit/submit_dashboard.php" class="nav-link">Submit</a>
+    <a href="../search/search_dashboard.php" class="nav-link">Search</a>
+    <a href="../search/statistics.php" class="nav-link">Statistics</a>
     <a href="list.php" class="nav-link active">Posts</a>
     <a href="../../auth/logout.php" class="nav-link nav-logout">Logout</a>
   </nav>
