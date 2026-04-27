@@ -86,7 +86,7 @@ if ($keyword !== '') {
   <title>Manage Users – Admin</title>
   <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <?php include $_SERVER['DOCUMENT_ROOT'] . '/dashboard/CSE_326_Project_NEW/includes/header.php'; ?>
+  <?php include __DIR__ . '/../../includes/header.php'; ?>
 </head>
 <body>
   <header id="page-header">
