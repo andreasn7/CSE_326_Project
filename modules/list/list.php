@@ -47,7 +47,7 @@ $posts = $stmt->fetchAll();
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Posts – CEI326</title>
   <link rel="stylesheet" href="../../assets/css/style.css">
-  <?php include $_SERVER['DOCUMENT_ROOT'] . '/dashboard/CSE_326_Project_NEW/includes/header.php'; ?>
+  <?php include __DIR__ . '/../../includes/header.php'; ?>
 </head>
 <body>
   <header id="page-header">
